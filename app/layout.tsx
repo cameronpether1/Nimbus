@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import Link from "next/link";
 import Image from "next/image";
-import nimbus from "./../public/nimbusalt.png";
+import nimbus from "./../public/NIMBUSalt.png";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
