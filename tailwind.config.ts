@@ -18,6 +18,11 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+        bakbak: ["var(--font-bakbak-one)"],
+        flowers: ["var(--font-send-flowers)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
