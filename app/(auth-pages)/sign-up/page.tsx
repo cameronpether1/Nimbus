@@ -36,6 +36,14 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
             minLength={6}
             required
           />
+          <Label htmlFor="name">Name</Label>
+          <Input
+            type="name"
+            name="name"
+            placeholder="Your Name"
+            minLength={3}
+            required
+          />
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>

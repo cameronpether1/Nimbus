@@ -22,6 +22,7 @@ const config = {
         sans: ["var(--font-inter)"],
         bakbak: ["var(--font-bakbak-one)"],
         flowers: ["var(--font-send-flowers)"],
+        silk: ["var(--font-silk)"],
       },
       colors: {
         border: "hsl(var(--border))",

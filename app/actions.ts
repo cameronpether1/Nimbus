@@ -5,14 +5,32 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const addAircraft = async (formData: FormData) => {
+  const registration = formData.get("registration")?.toString();
+  const airline = formData.get("airline")?.toString();
+  const icao = formData.get("icao")?.toString();
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("Fleet")
+    .insert([{ Reg: registration, Airline: airline, ICAO: icao }])
+    .select();
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return redirect("/fleet");
+  }
+};
+
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const name = formData.get("name")?.toString();
   const supabase = createClient();
   const origin = headers().get("origin");
 
-  if (!email || !password) {
-    return { error: "Email and password are required" };
+  if (!email || !password || !name) {
+    return { error: "Email, Password, and Name are required" };
   }
 
   const { error } = await supabase.auth.signUp({
@@ -20,6 +38,9 @@ export const signUpAction = async (formData: FormData) => {
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        first_name: name,
+      },
     },
   });
 

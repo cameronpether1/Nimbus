@@ -30,20 +30,65 @@ export type Database = {
         }
         Relationships: []
       }
-      notes: {
+      Fleet: {
         Row: {
+          Airline: string | null
+          ICAO: string | null
           id: number
-          title: string | null
+          owner: string
+          Reg: string | null
         }
         Insert: {
+          Airline?: string | null
+          ICAO?: string | null
           id?: number
-          title?: string | null
+          owner?: string
+          Reg?: string | null
         }
         Update: {
+          Airline?: string | null
+          ICAO?: string | null
           id?: number
-          title?: string | null
+          owner?: string
+          Reg?: string | null
         }
         Relationships: []
+      }
+      users: {
+        Row: {
+          email: string | null
+          id: string
+          name: string | null
+          Reg: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          name?: string | null
+          Reg?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          name?: string | null
+          Reg?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "users_Reg_fkey"
+            columns: ["Reg"]
+            isOneToOne: true
+            referencedRelation: "Aircraft"
+            referencedColumns: ["Registration"]
+          },
+        ]
       }
     }
     Views: {
@@ -53,7 +98,36 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      Reg:
+        | "G-DBCA"
+        | "G-DBCB"
+        | "G-DBCC"
+        | "G-DBCD"
+        | "G-DBCE"
+        | "G-DBCF"
+        | "G-DBCG"
+        | "G-DBCH"
+        | "G-DBCJ"
+        | "G-DBCK"
+        | "G-EUOA"
+        | "G-EUOE"
+        | "G-EUOF"
+        | "G-EUOG"
+        | "G-EUPD"
+        | "G-EUPJ"
+        | "G-EUPK"
+        | "G-EUPL"
+        | "G-EUPN"
+        | "G-EUPO"
+        | "G-EUPP"
+        | "G-EUPR"
+        | "G-EUPS"
+        | "G-EUPT"
+        | "G-EUPU"
+        | "G-EUPW"
+        | "G-EUPY"
+        | "G-EUPZ"
+        | "G-EUPG"
     }
     CompositeTypes: {
       [_ in never]: never

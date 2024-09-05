@@ -6,6 +6,8 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import Link from "next/link";
 import Image from "next/image";
 import nimbus from "../public/nimbusalt.png";
+import { useEffect } from "react";
+import Aircraft from "@/components/aircraft";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -13,8 +15,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Nimbus",
+  description: "The new Era Of Flight Simulation",
 };
 
 export default function RootLayout({
@@ -33,13 +35,24 @@ export default function RootLayout({
         >
           <main className="min-h-screen flex flex-col items-center">
             <div className="flex-1 w-full flex flex-col gap-20 items-center">
-              <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-                <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                  <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>
-                      <Image src={nimbus} width={70} alt=""></Image>
-                    </Link>
-                    <div className="flex items-center gap-2"></div>
+              <nav className="w-[80%] mt-5 justify-around  rounded-full bg-background flex border-b border-b-foreground/10 h-16">
+                <div className="w-full flex justify-evenly items-center p-3 px-5 text-sm ">
+                  <div className="flex gap-5 w-[50%] items-center font-semibold ">
+                    <Link href={"/"}>NIMBUS</Link>
+                    <div className="flex items-center gap-2 ">
+                      <Link
+                        className="border rounded-md p-2 py-1 hover:bg-accent"
+                        href={"/fleet"}
+                      >
+                        Fleet
+                      </Link>
+                      <Link
+                        className="border rounded-md p-2 py-1 hover:bg-accent"
+                        href={"/protected"}
+                      >
+                        Flights
+                      </Link>
+                    </div>
                   </div>
                   <HeaderAuth />
                 </div>
