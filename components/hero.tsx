@@ -24,7 +24,7 @@ export default function Header() {
           <Image src={nimbus} width={150} alt="" className="z-10" />
           <div className="absolute left-10 lg:inline-block hidden">
             <div
-              className={`${sendFlowers.variable} font-flowers text-[40px] w-[175px] font-medium rotate-[-4.52deg] bg-gradient-to-b from-[#EBEBEB] to-[#BED5F967] inline-block text-transparent bg-clip-text`}
+              className={`${sendFlowers.variable} absolute font-flowers text-[40px] w-[175px] font-medium text-center left-[-30px] top-[-50px] rotate-[-4.52deg] bg-gradient-to-b from-[#EBEBEB] to-[#BED5F967] inline-block text-transparent bg-clip-text`}
             >
               Welcome
             </div>
