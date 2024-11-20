@@ -4,21 +4,196 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { addHours, format, formatDate } from "date-fns";
+import { Divide } from "lucide-react";
 
+export const updateAircraft = async (
+  AircraftId: string,
+  formData: FormData
+) => {
+  const newRegistration = formData.get("newRegistration")?.toString();
+  const newAirframe = formData.get("newAirframe")?.toString();
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Fleet")
+    .update({ Reg: newRegistration, ICAO: newAirframe })
+    .eq("uuid", AircraftId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const deleteAircraft = async (AircraftId: string) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Fleet")
+    .delete()
+    .eq("uuid", AircraftId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const deleteFlight = async (FlightId: string) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Flights")
+    .delete()
+    .eq("uuid", FlightId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const addSavedAircraft = async (AircraftId: string) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Fleet")
+    .update({ favourite: true })
+    .eq("uuid", AircraftId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const removeSavedAircraft = async (AircraftId: string, Fav: boolean) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Fleet")
+    .update({ favourite: false })
+    .eq("uuid", AircraftId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const saveAircraft = async (AircraftId: string, Fav: boolean) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Fleet")
+    .update({ favourite: Fav })
+    .eq("uuid", AircraftId);
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
 export const addAircraft = async (formData: FormData) => {
   const registration = formData.get("registration")?.toString();
   const airline = formData.get("airline")?.toString();
-  const icao = formData.get("icao")?.toString();
+  const airframe = formData.get("airframe")?.toString();
   const supabase = createClient();
+  if (registration) {
+    const { error } = await supabase
+      .from("Fleet")
+      .insert([{ Reg: registration, Airline: airline, ICAO: airframe }])
+      .select();
+    if (error) {
+      console.error(error.code + " " + error.message);
+    } else {
+      return revalidatePath("/fleet");
+    }
+  }
+};
 
+function getDistanceFromLatLonInKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
+export const addFlight = async (formData: FormData) => {
+  const departure = formData.get("departure")?.toString();
+  const departureDate = formData.get("datedep")?.toString();
+  const destination = formData.get("destination")?.toString();
+  const aircraft = formData.get("aircraft")?.toString();
+  const latitude = formData.get("latitude") as unknown;
+  const longitude = formData.get("longitude") as unknown;
+  const destlatitude = formData.get("destlatitude") as unknown;
+  const destlongitude = formData.get("destlongitude") as unknown;
+
+  const lat1 = latitude as number;
+  const long1 = longitude as number;
+  const lat2 = destlatitude as number;
+  const long2 = destlongitude as number;
+
+  const mathdist = getDistanceFromLatLonInKm(lat1, long1, lat2, long2);
+  const dist = mathdist.toFixed(1);
+
+  var today = new Date();
+
+  var inittime = addHours(today, 0.5);
+  var deptime = formatDate(inittime, "p");
+
+  var flighttime = mathdist / 1000;
+
+  var inittime = addHours(inittime, flighttime + 0.75);
+  var arrtime = formatDate(inittime, "p");
+
+  const supabase = createClient();
   const { error } = await supabase
-    .from("Fleet")
-    .insert([{ Reg: registration, Airline: airline, ICAO: icao }])
+    .from("Flights")
+    .insert([
+      {
+        aircraft: aircraft,
+        start: departure,
+        destination: destination,
+        arrival_time: arrtime,
+        departure_time: deptime,
+        date: departureDate,
+        distance: dist,
+      },
+    ])
+    .select();
+  if (aircraft) {
+    const { data } = await supabase
+      .from("Fleet")
+      .update({ departure: departure, destination: destination })
+      .eq("Reg", aircraft)
+      .select();
+  }
+  if (error) {
+    console.error(error.code + " " + error.message);
+  } else {
+    return revalidatePath("/fleet");
+  }
+};
+export const completeFlight = async (FlightId: string) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Flights")
+    .update({ completed: true })
+    .eq("uuid", FlightId)
     .select();
   if (error) {
     console.error(error.code + " " + error.message);
   } else {
-    return redirect("/fleet");
+    return revalidatePath("/fleet");
   }
 };
 

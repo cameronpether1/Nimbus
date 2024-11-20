@@ -1,6 +1,5 @@
 import nimbus from "../public/nimbus.png";
 import Image from "next/image";
-
 import { Send_Flowers } from "next/font/google";
 import { Bakbak_One } from "next/font/google";
 const bakbakOne = Bakbak_One({
@@ -18,7 +17,7 @@ const sendFlowers = Send_Flowers({
 
 export default function Header() {
   return (
-    <main className="flex min-h-screen  justify-center h-[2000px] w-screen">
+    <main className="flex min-h-screen  justify-center  w-screen">
       <div className="flex items-center justify-center lg:w-[90%] lg:h-[560px] w-[90%] h-[300px] bg-[#2b71da36] rounded-xl">
         <div className="flex relative flex-col items-center justify-center w-[calc(100%-20px)]  h-[calc(100%-20px)] rounded-lg border-[11px] border-solid border-[#fffffff0] [background:radial-gradient(50%_50%_at_50%_50%,rgb(39.93,93.66,174.25)_0%,rgb(44,114,219)_100%)]">
           <Image src={nimbus} width={150} alt="" className="z-10" />
